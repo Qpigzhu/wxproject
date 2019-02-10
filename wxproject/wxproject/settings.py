@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django.middleware.cache.UpdateCacheMiddleware',  #全站缓存设置
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -58,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',#全站缓存设置
 ]
 
 ROOT_URLCONF = 'wxproject.urls'
@@ -137,3 +139,11 @@ STATICFILES_DIRS = (
 #上传文件路径
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
+#缓存设置
+CACHES = {
+    'default':{
+        'BACKEND':'django.core.cache.backends.locmem.LocMemCache',
+        'TIMEOUT':60 * 5,#缓存的过期时间，以秒为单位，默认值是300。如果设置成None表示永不会获取，如果设置成0会造成缓存立即失效
+    }
+}

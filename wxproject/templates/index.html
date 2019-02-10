@@ -15,12 +15,14 @@
     {% block js %}{% endblock %}
 </head>
 <body>
-<input type="button" value="获取二维码">
-<img width="300px" height="300px" src="data:image/jpg;base64,{{ code_image }}"/>
+<div style="margin:0 auto;">
+  <img width="300px" height="300px" src="data:image/jpg;base64,{{ code_image }}"/>
+</div>
+
 
 <script type="text/javascript">
   $(document).ready(function(){
-    //循环执行，5秒后执行
+    //循环执行，2秒后执行
     var t1=window.setInterval(refreshCount, 2000);
     function refreshCount() {
         $.ajax({
@@ -30,12 +32,11 @@
                 xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
             },
             data:{"uuid":"{{ uuid }}" },
-            cache:false,
+            cache:true,
             async : false,
             success:function (data) {
                 console.log(data)
                 if(data == 'success'){
-
                     window.location.href = "http://127.0.0.1:8000/friendsinfo/" + "{{ uuid }}/"
                     clearInterval(t1);
                 }

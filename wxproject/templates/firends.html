@@ -11,11 +11,14 @@
     <script src="{% static 'highcharts.js' %}"></script>
     <script src="{% static 'echarts.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'china.js' %}" ></script>
+    <script src="https://img.highcharts.com.cn/highcharts/modules/wordcloud.js"></script>
 </head>
 <body>
 <div id="container" style="min-width:400px;height:400px"></div>
 <hr>
 <div id="main" style="width: 800px;height: 800px;margin:0 auto;"></div>
+<hr>
+<div id="wordCloud" style="width: 800px;height: 800px;margin:0 auto;"></div>
 <script type="text/javascript">
     Highcharts.chart('container', {
 	chart: {
@@ -109,9 +112,24 @@ var optionMap = {
             };
         //初始化echarts实例
         var myChart = echarts.init(document.getElementById('main'));
-
         //使用制定的配置项和数据显示图表
         myChart.setOption(optionMap);
+
+
+        //词云图
+Highcharts.chart('wordCloud', {
+	series: [{
+		type: 'wordcloud',
+		data: [
+            {% for word_counts,weight in all_word_counts_dict.items %}
+            {name:"{{  word_counts }}",weight:{{weight}}},
+            {% endfor %}
+        ]
+	}],
+	title: {
+		text: '好友个人签名词云图'
+	}
+});
 
 </script>
 
