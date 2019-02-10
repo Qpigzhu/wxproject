@@ -1,0 +1,56 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}" crossorigin="anonymous">
+    <script src="{% static 'jquery.min.js' %}"></script>
+    <script src="{% static 'bootstrap.min.js' %}"></script>
+<script type="text/javascript">
+
+</script>
+    {% block js %}{% endblock %}
+</head>
+<body>
+<input type="button" value="获取二维码">
+<img width="300px" height="300px" src="data:image/jpg;base64,{{ code_image }}"/>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    //循环执行，5秒后执行
+    var t1=window.setInterval(refreshCount, 2000);
+    function refreshCount() {
+        $.ajax({
+            url:"{% url 'staus' %}",
+            type:"POST",
+            beforeSend:function (xhr,settings) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            },
+            data:{"uuid":"{{ uuid }}" },
+            cache:false,
+            async : false,
+            success:function (data) {
+                console.log(data)
+                if(data == 'success'){
+
+                    window.location.href = "http://127.0.0.1:8000/friendsinfo/" + "{{ uuid }}/"
+                    clearInterval(t1);
+                }
+            },
+            error:function (xhr) {
+                console.log(xhr)
+
+            }
+
+    });
+    }
+ });
+
+
+
+</script>
+</body>
+</html>

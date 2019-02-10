@@ -1,0 +1,119 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}" crossorigin="anonymous">
+    <script src="{% static 'jquery.min.js' %}"></script>
+    <script src="{% static 'bootstrap.min.js' %}"></script>
+    <script src="{% static 'highcharts.js' %}"></script>
+    <script src="{% static 'echarts.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'china.js' %}" ></script>
+</head>
+<body>
+<div id="container" style="min-width:400px;height:400px"></div>
+<hr>
+<div id="main" style="width: 800px;height: 800px;margin:0 auto;"></div>
+<script type="text/javascript">
+    Highcharts.chart('container', {
+	chart: {
+		plotBackgroundColor: null,
+		plotBorderWidth: null,
+		plotShadow: false,
+		type: 'pie'
+	},
+    colors: ['#058DC7', '#ED561B', '#DDDF00',
+				 '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+	title: {
+		text: '好友性别分布表'
+	},
+	tooltip: {
+		pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	},
+	plotOptions: {
+		pie: {
+			allowPointSelect: true,
+			cursor: 'pointer',
+			dataLabels: {
+				enabled: true,
+				format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+				style: {
+					color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+				}
+			}
+		}
+	},
+	series: [{
+		name: 'Brands',
+		colorByPoint: true,
+		data: [{
+			name: '男',
+			y: {{ male }},//数据
+		}, {
+			name: '女',
+			y: {{ female }}
+		}, {
+			name: '不明性别',
+			y: {{ unknown }}
+		}]
+	}]
+});
+
+    //省份统计
+var optionMap = {
+                backgroundColor: '#FFFFFF',
+                title: {
+                    text: '好友省份分布图',
+                    subtext: '',
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'item'
+                },
+
+                //左侧小导航图标
+                visualMap: {
+                    show : true,
+                    x: 'left',
+                    y: 'center',
+                    splitList: [
+                        {start: 400, end:9999},{start: 200, end: 400},
+                        {start:100, end: 200},{start: 50, end: 100},
+                        {start: 1, end: 50},{start: 0, end: 0},
+                    ],
+                    color: ['#DC143C', '#74e2ca', '#e6ac53','#9feaa5', '#85daef','#778899']
+                },
+
+                //配置属性
+                series: [{
+                    name: '数据',
+                    type: 'map',
+                    mapType: 'china',
+                    roam: true,
+                    label: {
+                        normal: {
+                            show: true  //省份名称
+                        },
+                        emphasis: {
+                            show: false
+                        }
+                    },
+                    data:[
+                        {% for city,value in all_province.items %}
+                         {name: '{{ city }}',value: '{{ value }}' },
+                        {% endfor %}
+                    ]  //数据
+                }]
+            };
+        //初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        //使用制定的配置项和数据显示图表
+        myChart.setOption(optionMap);
+
+</script>
+
+</body>
+</html>
