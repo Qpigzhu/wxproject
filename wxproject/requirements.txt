@@ -8,7 +8,7 @@ django-import-export==1.1.0
 django-reversion==3.0.2
 et-xmlfile==1.0.1
 future==0.15.2
-httplib2==0.9.2
+httplib2==0.18.0
 idna==2.7
 itchat==1.2.32
 jdcal==1.4
